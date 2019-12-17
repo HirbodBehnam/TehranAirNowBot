@@ -57,6 +57,9 @@ func main() {
 			switch update.Message.Command() {
 			case "start":
 				msg.Text = "یک بات ساده برای گرفتن میزان آلودگی هوای تهران از سایت https://airnow.tehran.ir/. برای گرفتن میزان آلودگی هوا از /airnow استفاده کنید."
+			case "help":
+				msg.Text = "برای گرفتن وضعیت هوا از /airnow استفاده کنید.\nشما می توانید این ربات را به گروه های خود اد کنید یا اینکه از Inline Mode برای گرفتن اطلاعات نیز استفاده کنید.\nتمامی دیتا ها از سایت https://airnow.tehran.ir/ جمع آوری می شوند."
+				msg.DisableWebPagePreview = true
 			case "about":
 				msg.Text = "A simple bot by Hirbod Behnam\nSource at https://github.com/HirbodBehnam/TehranAirNowBot\nVersion " + Version
 			case "airnow":
