@@ -88,7 +88,7 @@ func main() {
 						PicCache[intNow] = (*picSent.Photo)[0].FileID
 					} else { //Send the photo by id
 						messagePic := tgbotapi.NewPhotoShare(fUpdate.Message.Chat.ID, PicCache[intNow])
-						messagePic.Caption = fmt.Sprintf(FinalResults, strconv.FormatInt(int64(intNow), 10), nowDetails, yesterday, yesterdayDetails)
+						messagePic.Caption = fmt.Sprintf(FinalResults, now, nowDetails, yesterday, yesterdayDetails)
 						messagePic.ReplyToMessageID = fUpdate.Message.MessageID
 						_, _ = bot.Send(messagePic)
 					}
