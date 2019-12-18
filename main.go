@@ -41,11 +41,12 @@ func main() {
 				CacheTime:     0,
 				Results:       nil,
 			}
-			now, _, yesterday, nowDetails, yesterdayDetails, err := GetStatus()
+			now, nowInt, yesterday, nowDetails, yesterdayDetails, err := GetStatus()
 			if err != nil {
 				inline.Results = []interface{}{tgbotapi.NewInlineQueryResultArticle(update.InlineQuery.ID, "Error", "Cannot get results :(")}
 			} else {
 				toSend := tgbotapi.NewInlineQueryResultArticle(update.InlineQuery.ID, now, fmt.Sprintf(FinalResults, now, nowDetails, yesterday, yesterdayDetails))
+				toSend.ThumbURL = "https://github.com/HirbodBehnam/TehranAirNowBot/raw/master/" + strconv.FormatInt(int64(nowInt), 10) + ".jpg"
 				toSend.Description = fmt.Sprintf(FinalResults, now, nowDetails, yesterday, yesterdayDetails)
 				inline.Results = []interface{}{toSend}
 			}
@@ -84,7 +85,7 @@ func main() {
 						messagePic.ReplyToMessageID = fUpdate.Message.MessageID
 						_, _ = bot.Send(messagePic)
 					} else if PicCache[intNow] == "" { //Check cache This means empty cache; upload the photo
-						messagePic := tgbotapi.NewPhotoUpload(fUpdate.Message.Chat.ID, strconv.FormatInt(int64(intNow), 10)+".png")
+						messagePic := tgbotapi.NewPhotoUpload(fUpdate.Message.Chat.ID, strconv.FormatInt(int64(intNow), 10)+".jpg")
 						messagePic.Caption = fmt.Sprintf(FinalResults, now, nowDetails, yesterday, yesterdayDetails)
 						messagePic.ReplyToMessageID = fUpdate.Message.MessageID
 						picSent, _ := bot.Send(messagePic)
