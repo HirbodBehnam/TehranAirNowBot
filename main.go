@@ -15,8 +15,6 @@ import (
 const FinalResults = "شاخص امروز: %s\n%s\n\nشاخص دیروز: %s\n%s"
 const Version = "1.0.0/Build 1"
 
-var PicCache [6]string //Simple cache to do not reupload the photos
-
 func main() {
 	if len(os.Args) < 2 {
 		log.Fatal("Please pass your bot token as argument.")
@@ -84,14 +82,8 @@ func main() {
 						messagePic := tgbotapi.NewMessage(fUpdate.Message.Chat.ID, fmt.Sprintf(FinalResults, now, nowDetails, yesterday, yesterdayDetails))
 						messagePic.ReplyToMessageID = fUpdate.Message.MessageID
 						_, _ = bot.Send(messagePic)
-					} else if PicCache[intNow] == "" { //Check cache This means empty cache; upload the photo
-						messagePic := tgbotapi.NewPhotoUpload(fUpdate.Message.Chat.ID, strconv.FormatInt(int64(intNow), 10)+".jpg")
-						messagePic.Caption = fmt.Sprintf(FinalResults, now, nowDetails, yesterday, yesterdayDetails)
-						messagePic.ReplyToMessageID = fUpdate.Message.MessageID
-						picSent, _ := bot.Send(messagePic)
-						PicCache[intNow] = (*picSent.Photo)[0].FileID
-					} else { //Send the photo by id
-						messagePic := tgbotapi.NewPhotoShare(fUpdate.Message.Chat.ID, PicCache[intNow])
+					} else { //Check cache This means empty cache; upload the photo
+						messagePic := tgbotapi.NewPhotoShare(fUpdate.Message.Chat.ID, "https://github.com/HirbodBehnam/TehranAirNowBot/raw/master/"+strconv.FormatInt(int64(intNow), 10)+".jpg")
 						messagePic.Caption = fmt.Sprintf(FinalResults, now, nowDetails, yesterday, yesterdayDetails)
 						messagePic.ReplyToMessageID = fUpdate.Message.MessageID
 						_, _ = bot.Send(messagePic)
