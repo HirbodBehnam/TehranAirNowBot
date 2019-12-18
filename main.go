@@ -13,7 +13,7 @@ import (
 )
 
 const FinalResults = "شاخص امروز: %s\n%s\n\nشاخص دیروز: %s\n%s"
-const Version = "1.0.0/Build 1"
+const Version = "1.0.1/Build 2"
 
 func main() {
 	if len(os.Args) < 2 {
