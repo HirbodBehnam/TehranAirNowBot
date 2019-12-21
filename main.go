@@ -13,7 +13,7 @@ import (
 )
 
 const FinalResults = "شاخص امروز: %s\n%s\n\nشاخص دیروز: %s\n%s"
-const Version = "1.0.1/Build 2"
+const Version = "1.0.2/Build 3"
 
 func main() {
 	if len(os.Args) < 2 {
@@ -33,22 +33,24 @@ func main() {
 			continue
 		}
 		if update.InlineQuery != nil {
-			inline := tgbotapi.InlineConfig{
-				InlineQueryID: update.InlineQuery.ID,
-				IsPersonal:    true,
-				CacheTime:     0,
-				Results:       nil,
-			}
-			now, nowInt, yesterday, nowDetails, yesterdayDetails, err := GetStatus()
-			if err != nil {
-				inline.Results = []interface{}{tgbotapi.NewInlineQueryResultArticle(update.InlineQuery.ID, "Error", "Cannot get results :(")}
-			} else {
-				toSend := tgbotapi.NewInlineQueryResultArticle(update.InlineQuery.ID, now, fmt.Sprintf(FinalResults, now, nowDetails, yesterday, yesterdayDetails))
-				toSend.ThumbURL = "https://github.com/HirbodBehnam/TehranAirNowBot/raw/master/" + strconv.FormatInt(int64(nowInt), 10) + ".jpg"
-				toSend.Description = fmt.Sprintf(FinalResults, now, nowDetails, yesterday, yesterdayDetails)
-				inline.Results = []interface{}{toSend}
-			}
-			_, _ = bot.AnswerInlineQuery(inline)
+			go func(lUpdate tgbotapi.Update) {
+				inline := tgbotapi.InlineConfig{
+					InlineQueryID: lUpdate.InlineQuery.ID,
+					IsPersonal:    true,
+					CacheTime:     0,
+					Results:       nil,
+				}
+				now, nowInt, yesterday, nowDetails, yesterdayDetails, err := GetStatus()
+				if err != nil {
+					inline.Results = []interface{}{tgbotapi.NewInlineQueryResultArticle(lUpdate.InlineQuery.ID, "Error", "Cannot get results :(")}
+				} else {
+					toSend := tgbotapi.NewInlineQueryResultArticle(lUpdate.InlineQuery.ID, now, fmt.Sprintf(FinalResults, now, nowDetails, yesterday, yesterdayDetails))
+					toSend.ThumbURL = "https://github.com/HirbodBehnam/TehranAirNowBot/raw/master/" + strconv.FormatInt(int64(nowInt), 10) + ".jpg"
+					toSend.Description = fmt.Sprintf(FinalResults, now, nowDetails, yesterday, yesterdayDetails)
+					inline.Results = []interface{}{toSend}
+				}
+				_, _ = bot.AnswerInlineQuery(inline)
+			}(update)
 			continue
 		}
 		if update.Message.IsCommand() {
